@@ -100,6 +100,3 @@ To watch movies on other devices (TV, Phone, Tablet) connected to the same Wi-Fi
 4.  **Watch**:
     *   Go to `http://192.168.1.10:5173` on your phone or TV browser.
 
-## License
-
-MIT

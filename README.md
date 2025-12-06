@@ -31,7 +31,7 @@ A self-hosted media server application that allows you to manage, organize, and 
 
 1.  **Clone the repository**
     ```bash
-    git clone <your-repo-url>
+    git clone https://github.com/qasimsyed16/movie-server.git
     cd Movie-Server
     ```
 

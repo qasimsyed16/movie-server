@@ -40,11 +40,24 @@ export const parseSubtitles = (content) => {
         if (line.includes('WEBVTT')) continue;
 
         // Pattern for timecode: 00:00:00,000 --> 00:00:00,000
-        const timeMatch = line.match(/(\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[,\.]\d{3})/);
+        // Pattern for timecode: 00:00:00,000 or 00:00,000 --> ...
+        // Regex: (hours?:)?minutes:seconds[.,]milliseconds
+        const timeMatch = line.match(/(?:(\d{2}):)?(\d{2}):(\d{2})[,\.](\d{3})\s*-->\s*(?:(\d{2}):)?(\d{2}):(\d{2})[,\.](\d{3})/);
 
         if (timeMatch) {
-            currentSub.start = parseTime(timeMatch[1]);
-            currentSub.end = parseTime(timeMatch[2]);
+            // Group 1: Start Hours (opt), 2: Start Min, 3: Start Sec, 4: Start MS
+            // Group 5: End Hours (opt),   6: End Min,   7: End Sec,   8: End MS
+
+            const parseParts = (h, m, s, ms) => {
+                const hours = h ? parseInt(h, 10) : 0;
+                const minutes = parseInt(m, 10);
+                const seconds = parseInt(s, 10);
+                const milliseconds = parseInt(ms, 10);
+                return (hours * 3600) + (minutes * 60) + seconds + (milliseconds / 1000);
+            };
+
+            currentSub.start = parseParts(timeMatch[1], timeMatch[2], timeMatch[3], timeMatch[4]);
+            currentSub.end = parseParts(timeMatch[5], timeMatch[6], timeMatch[7], timeMatch[8]);
             state = 'text';
         } else if (state === 'text') {
             currentSub.text = currentSub.text ? currentSub.text + '\n' + line : line;

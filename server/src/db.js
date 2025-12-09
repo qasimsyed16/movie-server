@@ -39,6 +39,18 @@ async function initDb() {
       subtitle_path TEXT,
       FOREIGN KEY(media_id) REFERENCES media(id)
     );
+
+    CREATE TABLE IF NOT EXISTS subtitles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      media_id INTEGER,
+      episode_id INTEGER,
+      language TEXT,
+      label TEXT,
+      file_path TEXT,
+      is_default BOOLEAN DEFAULT 0,
+      FOREIGN KEY(media_id) REFERENCES media(id),
+      FOREIGN KEY(episode_id) REFERENCES episodes(id)
+    );
   `);
   console.log('Database initialized');
   return db;

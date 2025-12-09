@@ -119,7 +119,7 @@ const ShowDetails = ({ media, onClose, onPlayEpisode, onUploadEpisode }) => {
                                                     <h4 className="font-medium text-gray-900 dark:text-white truncate" title={episode.name}>
                                                         {episode.episode_number}. {episode.name}
                                                     </h4>
-                                                    {uploadedEpisode && uploadedEpisode.subtitle_path && (
+                                                    {uploadedEpisode && (uploadedEpisode.subtitle_path || (uploadedEpisode.available_subtitles && uploadedEpisode.available_subtitles.length > 0)) && (
                                                         <span className="text-xs text-green-600 dark:text-green-400">Subtitles available</span>
                                                     )}
                                                 </div>

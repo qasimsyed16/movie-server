@@ -31,7 +31,15 @@ app.get('/', (req, res) => {
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, uploadsDir)
+        if (file.fieldname === 'subtitle') {
+            const subtitlesDir = path.join(uploadsDir, 'subtitles');
+            if (!fs.existsSync(subtitlesDir)) {
+                fs.mkdirSync(subtitlesDir, { recursive: true });
+            }
+            cb(null, subtitlesDir);
+        } else {
+            cb(null, uploadsDir);
+        }
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -209,6 +217,15 @@ app.post('/api/media', async (req, res) => {
                 );
 
                 // Link extracted subtitles to this episode if any
+                if (subtitle_path) {
+                    const subPath = path.posix.join('subtitles', path.basename(subtitle_path));
+                    await db.run(
+                        `INSERT INTO subtitles (episode_id, language, label, file_path)
+                         VALUES (?, ?, ?, ?)`,
+                        [existingEp.id, 'und', 'Default', subPath]
+                    );
+                }
+
                 if (file_path) {
                     // We need to find if we just uploaded this file and extracted subs
                     // This is a bit tricky because the extraction happened in /api/upload
@@ -267,6 +284,15 @@ app.post('/api/media', async (req, res) => {
                     [media.id, season_number, episode_number, episode_title, file_path, subtitle_path]
                 );
 
+                if (subtitle_path) {
+                    const subPath = path.posix.join('subtitles', path.basename(subtitle_path));
+                    await db.run(
+                        `INSERT INTO subtitles (episode_id, language, label, file_path)
+                         VALUES (?, ?, ?, ?)`,
+                        [result.lastID, 'und', 'Default', subPath]
+                    );
+                }
+
                 // Link extracted subtitles (same logic as above)
                 if (file_path) {
                     const VideoPath = path.join(uploadsDir, file_path);
@@ -306,6 +332,15 @@ app.post('/api/media', async (req, res) => {
             );
 
             // Link extracted subtitles
+            if (subtitle_path) {
+                const subPath = path.posix.join('subtitles', path.basename(subtitle_path));
+                await db.run(
+                    `INSERT INTO subtitles (media_id, language, label, file_path)
+                     VALUES (?, ?, ?, ?)`,
+                    [result.lastID, 'und', 'Default', subPath]
+                );
+            }
+
             if (file_path) {
                 const VideoPath = path.join(uploadsDir, file_path);
                 const baseName = path.basename(VideoPath, path.extname(VideoPath));
@@ -352,7 +387,8 @@ app.post('/api/upload', upload.fields([{ name: 'video', maxCount: 1 }, { name: '
     };
 
     if (req.files['subtitle']) {
-        response.subtitle_path = req.files['subtitle'][0].filename;
+        // Return relative path including 'subtitles/' folder so frontend sends correct path to /api/media
+        response.subtitle_path = path.posix.join('subtitles', req.files['subtitle'][0].filename);
     }
 
     // Attempt subtitle extraction (fire and forget or wait?)

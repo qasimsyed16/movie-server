@@ -85,7 +85,7 @@ const ShowDetails = ({ media, onClose, onPlayEpisode, onUploadEpisode }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-gray-900 to-transparent"></div>
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+                    className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors cursor-pointer"
                 >
                     <X className="h-6 w-6" />
                 </button>

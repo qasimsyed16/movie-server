@@ -174,20 +174,27 @@ function App() {
                 Back to Library
               </button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {searchResults.map((media) => {
-                const existing = library.find(m => m.tmdb_id === media.id);
-                return (
-                  <MovieCard
-                    key={media.id}
-                    media={existing || media}
-                    onPlay={() => handleCardClick(existing || media)}
-                    onUpload={() => handleCardClick(existing || media)}
-                    onDelete={existing ? () => handleDelete(existing) : null}
-                  />
-                );
-              })}
-            </div>
+            {searchResults.length === 0 ? (
+              <div className="text-center py-20 text-gray-500 dark:text-gray-400">
+                <p className="text-xl">No results found.</p>
+                <p>Try searching for something else.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                {searchResults.map((media) => {
+                  const existing = library.find(m => m.tmdb_id === media.id);
+                  return (
+                    <MovieCard
+                      key={media.id}
+                      media={existing || media}
+                      onPlay={() => handleCardClick(existing || media)}
+                      onUpload={() => handleCardClick(existing || media)}
+                      onDelete={existing ? () => handleDelete(existing) : null}
+                    />
+                  );
+                })}
+              </div>
+            )}
           </section>
         ) : (
           <section>

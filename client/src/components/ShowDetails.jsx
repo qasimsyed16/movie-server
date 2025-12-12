@@ -18,11 +18,7 @@ const ShowDetails = ({ media, onClose, onPlayEpisode, onUploadEpisode }) => {
     const fetchDetails = async () => {
         setLoading(true);
         try {
-            // 1. Fetch TMDB details for seasons info
-            const tmdbRes = await axios.get(`${API_URL}/api/tmdb/tv/${media.tmdb_id || media.id}`);
-            setTmdbDetails(tmdbRes.data);
-
-            // 2. Fetch local details for uploaded episodes
+            // 1. Fetch local details first (prioritize local knowledge)
             let localData = null;
             if (media.id && !media.media_type) { // It's from our DB
                 try {
@@ -31,25 +27,58 @@ const ShowDetails = ({ media, onClose, onPlayEpisode, onUploadEpisode }) => {
                 } catch (e) { console.log('Not in local DB yet'); }
             } else {
                 // Check if it exists in DB by TMDB ID (search result case)
-                const allMediaRes = await axios.get(`${API_URL}/api/media`);
-                localData = allMediaRes.data.find(m => m.tmdb_id === (media.id));
-                if (localData) {
-                    const fullLocalRes = await axios.get(`${API_URL}/api/media/${localData.id}`);
-                    localData = fullLocalRes.data;
-                }
+                try {
+                    const allMediaRes = await axios.get(`${API_URL}/api/media`);
+                    const found = allMediaRes.data.find(m => m.tmdb_id === (media.id));
+                    if (found) {
+                        const fullLocalRes = await axios.get(`${API_URL}/api/media/${found.id}`);
+                        localData = fullLocalRes.data;
+                    }
+                } catch (e) { console.log('Failed to check local DB', e); }
             }
             setLocalDetails(localData);
 
-            // 3. Fetch all seasons details from TMDB
-            if (tmdbRes.data && tmdbRes.data.seasons) {
-                const seasonsData = {};
-                for (const season of tmdbRes.data.seasons) {
-                    if (season.season_number > 0) { // Skip specials for now
-                        const seasonRes = await axios.get(`${API_URL}/api/tmdb/tv/${media.tmdb_id || media.id}/season/${season.season_number}`);
-                        seasonsData[season.season_number] = seasonRes.data.episodes;
+            // 2. Try to fetch TMDB details
+            try {
+                const tmdbRes = await axios.get(`${API_URL}/api/tmdb/tv/${media.tmdb_id || media.id}`);
+                setTmdbDetails(tmdbRes.data);
+
+                // 3. Fetch all seasons details from TMDB
+                if (tmdbRes.data && tmdbRes.data.seasons) {
+                    const seasonsData = {};
+                    for (const season of tmdbRes.data.seasons) {
+                        if (season.season_number > 0) { // Skip specials for now
+                            try {
+                                const seasonRes = await axios.get(`${API_URL}/api/tmdb/tv/${media.tmdb_id || media.id}/season/${season.season_number}`);
+                                seasonsData[season.season_number] = seasonRes.data.episodes;
+                            } catch (err) {
+                                console.error(`Failed to fetch season ${season.season_number}`, err);
+                            }
+                        }
                     }
+                    setSeasons(seasonsData);
                 }
-                setSeasons(seasonsData);
+            } catch (tmdbError) {
+                console.error('TMDB fetch failed (offline mode?)', tmdbError);
+                // Fallback: Construct seasons from local data if available
+                if (localData && localData.episodes) {
+                    const seasonsData = {};
+                    localData.episodes.forEach(ep => {
+                        if (!seasonsData[ep.season_number]) {
+                            seasonsData[ep.season_number] = [];
+                        }
+                        // Adapt local episode to look like TMDB episode for the UI
+                        seasonsData[ep.season_number].push({
+                            id: ep.id, // Use local ID
+                            name: ep.title, // Map title to name
+                            episode_number: ep.episode_number,
+                            season_number: ep.season_number,
+                            overview: ep.overview || 'Description unavailable in offline mode.',
+                            still_path: null // No image in offline mode yet
+                        });
+                    });
+                    setSeasons(seasonsData);
+                }
             }
 
         } catch (error) {

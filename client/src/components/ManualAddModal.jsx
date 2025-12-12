@@ -77,68 +77,68 @@ const ManualAddModal = ({ isOpen, onClose, onUploadComplete }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 m-4 max-h-[90vh] overflow-y-auto">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg p-6 m-4 max-h-[90vh] overflow-y-auto transition-colors duration-200">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-gray-900">Manually Add Movie</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Manually Add Movie</h2>
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <X className="h-6 w-6" />
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:text-white"
                             placeholder="Movie Title"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Year</label>
                         <input
                             type="number"
                             value={year}
                             onChange={(e) => setYear(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:text-white"
                             placeholder="2023"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Poster URL (Optional)</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Poster URL (Optional)</label>
                         <div className="flex gap-2">
                             <input
                                 type="url"
                                 value={posterUrl}
                                 onChange={(e) => setPosterUrl(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:text-white"
                                 placeholder="https://example.com/poster.jpg"
                             />
                             {posterUrl && (
-                                <img src={posterUrl} alt="Preview" className="h-10 w-auto rounded border" />
+                                <img src={posterUrl} alt="Preview" className="h-10 w-auto rounded border dark:border-gray-600" />
                             )}
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Overview</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Overview</label>
                         <textarea
                             value={overview}
                             onChange={(e) => setOverview(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:text-white"
                             rows="3"
                             placeholder="Description..."
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Video File</label>
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Video File</label>
+                        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
                             <input
                                 type="file"
                                 accept="video/*"
@@ -149,7 +149,7 @@ const ManualAddModal = ({ isOpen, onClose, onUploadComplete }) => {
                             />
                             <label htmlFor="manual-video-upload" className="cursor-pointer flex flex-col items-center gap-2">
                                 <Film className="h-8 w-8 text-gray-400" />
-                                <span className="text-sm text-gray-600">
+                                <span className="text-sm text-gray-600 dark:text-gray-400">
                                     {videoFile ? videoFile.name : 'Click to select video file'}
                                 </span>
                             </label>
@@ -160,13 +160,13 @@ const ManualAddModal = ({ isOpen, onClose, onUploadComplete }) => {
 
                     {uploading && (
                         <div className="mb-4">
-                            <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                 <div
                                     className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                                     style={{ width: `${progress}%` }}
                                 ></div>
                             </div>
-                            <p className="text-sm text-gray-500 mt-1 text-center">{progress}% Uploaded</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">{progress}% Uploaded</p>
                         </div>
                     )}
 
@@ -174,7 +174,7 @@ const ManualAddModal = ({ isOpen, onClose, onUploadComplete }) => {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                            className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                             disabled={uploading}
                         >
                             Cancel

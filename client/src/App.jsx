@@ -144,14 +144,14 @@ function App() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                 title="Toggle Dark Mode"
               >
                 {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </button>
               <button
                 onClick={() => setShowManualAddModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium cursor-pointer"
               >
                 <Plus className="h-4 w-4" />
                 Add Manually
@@ -169,25 +169,32 @@ function App() {
               <h2 className="text-2xl font-bold">Search Results</h2>
               <button
                 onClick={clearSearch}
-                className="text-blue-600 dark:text-blue-400 hover:underline"
+                className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
               >
                 Back to Library
               </button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {searchResults.map((media) => {
-                const existing = library.find(m => m.tmdb_id === media.id);
-                return (
-                  <MovieCard
-                    key={media.id}
-                    media={existing || media}
-                    onPlay={() => handleCardClick(existing || media)}
-                    onUpload={() => handleCardClick(existing || media)}
-                    onDelete={existing ? () => handleDelete(existing) : null}
-                  />
-                );
-              })}
-            </div>
+            {searchResults.length === 0 ? (
+              <div className="text-center py-20 text-gray-500 dark:text-gray-400">
+                <p className="text-xl">No results found.</p>
+                <p>Try searching for something else.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                {searchResults.map((media) => {
+                  const existing = library.find(m => m.tmdb_id === media.id);
+                  return (
+                    <MovieCard
+                      key={media.id}
+                      media={existing || media}
+                      onPlay={() => handleCardClick(existing || media)}
+                      onUpload={() => handleCardClick(existing || media)}
+                      onDelete={existing ? () => handleDelete(existing) : null}
+                    />
+                  );
+                })}
+              </div>
+            )}
           </section>
         ) : (
           <section>

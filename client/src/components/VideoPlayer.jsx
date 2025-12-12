@@ -125,7 +125,7 @@ const VideoPlayer = ({ media, episode, onClose }) => {
                 </h2>
                 <button
                     onClick={onClose}
-                    className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors backdrop-blur-sm"
+                    className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors backdrop-blur-sm cursor-pointer"
                 >
                     <X className="h-6 w-6" />
                 </button>
@@ -137,7 +137,7 @@ const VideoPlayer = ({ media, episode, onClose }) => {
                 <div className="flex items-center bg-black/60 rounded-lg p-1 backdrop-blur-sm shadow-lg border border-white/10">
                     <button
                         onClick={() => setShowSubtitles(!showSubtitles)}
-                        className={`p-2 rounded hover:bg-white/10 transition-colors ${showSubtitles ? 'text-green-400' : 'text-gray-400'}`}
+                        className={`p-2 rounded hover:bg-white/10 transition-colors cursor-pointer ${showSubtitles ? 'text-green-400' : 'text-gray-400'}`}
                         title={showSubtitles ? "Disable Subtitles" : "Enable Subtitles"}
                     >
                         <Captions className="h-5 w-5" />
@@ -179,7 +179,7 @@ const VideoPlayer = ({ media, episode, onClose }) => {
                                 <Clock className="h-4 w-4 text-gray-400" />
                                 <button
                                     onClick={() => setSubtitleOffset(prev => prev - 0.5)}
-                                    className="px-2 hover:bg-white/20 rounded font-bold"
+                                    className="px-2 hover:bg-white/20 rounded font-bold cursor-pointer"
                                     title="Delay -0.5s"
                                 >-</button>
                                 <span className="w-12 text-center text-xs font-mono">
@@ -187,7 +187,7 @@ const VideoPlayer = ({ media, episode, onClose }) => {
                                 </span>
                                 <button
                                     onClick={() => setSubtitleOffset(prev => prev + 0.5)}
-                                    className="px-2 hover:bg-white/20 rounded font-bold"
+                                    className="px-2 hover:bg-white/20 rounded font-bold cursor-pointer"
                                     title="Delay +0.5s"
                                 >+</button>
                             </div>
@@ -197,7 +197,7 @@ const VideoPlayer = ({ media, episode, onClose }) => {
 
                 <button
                     onClick={toggleFullscreen}
-                    className="p-3 bg-black/60 rounded-full hover:bg-white/20 text-white transition-colors backdrop-blur-sm shadow-lg border border-white/10"
+                    className="p-3 bg-black/60 rounded-full hover:bg-white/20 text-white transition-colors backdrop-blur-sm shadow-lg border border-white/10 cursor-pointer"
                     title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                 >
                     {isFullscreen ? <Minimize className="h-6 w-6" /> : <Maximize className="h-6 w-6" />}

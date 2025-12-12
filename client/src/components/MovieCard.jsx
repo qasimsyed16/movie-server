@@ -24,7 +24,7 @@ const MovieCard = ({ media, onPlay, onUpload, onDelete }) => {
                     {media.file_path ? (
                         <button
                             onClick={() => onPlay(media)}
-                            className="p-3 bg-white rounded-full hover:bg-gray-200 transition-colors"
+                            className="p-3 bg-white rounded-full hover:bg-gray-200 transition-colors cursor-pointer"
                             title="Play"
                         >
                             <Play className="h-6 w-6 text-black" fill="currentColor" />
@@ -32,7 +32,7 @@ const MovieCard = ({ media, onPlay, onUpload, onDelete }) => {
                     ) : (
                         <button
                             onClick={() => onUpload(media)}
-                            className="p-3 bg-blue-600 rounded-full hover:bg-blue-700 transition-colors"
+                            className="p-3 bg-blue-600 rounded-full hover:bg-blue-700 transition-colors cursor-pointer"
                             title="Upload"
                         >
                             <Upload className="h-6 w-6 text-white" />
@@ -56,7 +56,7 @@ const MovieCard = ({ media, onPlay, onUpload, onDelete }) => {
                                 e.stopPropagation();
                                 onDelete(media);
                             }}
-                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors cursor-pointer"
                             title="Delete"
                         >
                             <Trash className="h-5 w-5" />
